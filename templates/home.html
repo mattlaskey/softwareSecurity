@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="button-container">
+            <a href="{{ url_for('logout') }}" class="logout-button">Logout</a>
+            <a href="{{ url_for('checkout') }}" class="checkout-button">Checkout</a>
+            <a href="{{ url_for('empty_cart_endpoint') }}" class="empty_cart-button">Empty Cart</a>
+            <a href="{{ url_for('change_password') }}" class="change-password-button">Change Password</a>
+        </div>
+        <div class="products">
+            <div class="product">
+                <div class="product-image">
+                    <img src="{{ url_for('static', filename='stick.jfif') }}" alt="Product 1 Image">
+                </div>
+                <div class="product-details">
+                    <h3>Hockey Stick</h3>
+                    <p class="product-description">The Bauer stick features advanced materials and precision engineering for optimal performance, providing hockey players with exceptional control and power on the ice.</p>
+                    <p class="product-price">$59.99</p>
+                    <form id="add-to-cart-form1">
+                        <input type="hidden" name="product_id" value="1">
+                        <label for="quantity_product1">Quantity:</label>
+                        <input type="number" id="quantity_product1" name="quantity" value="1" min="1" required>
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token }}">
+                        <button type="submit">Add to Cart</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="product">
+                <div class="product-image">
+                    <img src="{{ url_for('static', filename='helmet.jfif') }}" alt="Product 2 Image">
+                </div>
+                <div class="product-details">
+                    <h3>Helmet</h3>
+                    <p class="product-description">The Reebok helmet with visor combines protective headgear with integrated facial protection, offering enhanced safety and visibility on the hockey rink</p>
+                    <p class="product-price">$29.99</p>
+                    <form id="add-to-cart-form2">
+                        <input type="hidden" name="product_id" value="2">
+                        <label for="quantity_product2">Quantity:</label>
+                        <input type="number" id="quantity_product2" name="quantity" value="1" min="1" required>
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token }}">
+                        <button type="submit">Add to Cart</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="product">
+                <div class="product-image">
+                    <img src="{{ url_for('static', filename='skates.jfif') }}" alt="Product 3 Image">
+                </div>
+                <div class="product-details">
+                    <h3>Skates</h3>
+                    <p class="product-description">The Bauer Vapor skates are crafted with precision engineering and advanced materials, designed to provide hockey players with unparalleled agility and explosive acceleration.</p>
+                    <p class="product-price">$99.99</p>
+                    <form id="add-to-cart-form3">
+                        <input type="hidden" name="product_id" value="3">
+                        <label for="quantity_product3">Quantity:</label>
+                        <input type="number" id="quantity_product3" name="quantity" value="1" min="1" required>
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token }}">
+                        <button type="submit">Add to Cart</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            document.getElementById('add-to-cart-form1').addEventListener('submit', function(event) {
+                event.preventDefault();
+                var formData = new FormData(this);
+                var jsonObject = Object.fromEntries(formData.entries());
+                alert("Product ID: " + jsonObject.product_id + "\n" + "Quantity: " + jsonObject.quantity);
+
+                fetch('/add_to_cart', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(Object.fromEntries(formData.entries()))
+                })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.message); 
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            });
+
+            document.getElementById('add-to-cart-form2').addEventListener('submit', function(event) {
+                event.preventDefault();
+                var formData = new FormData(this);
+                var jsonObject = Object.fromEntries(formData.entries());
+                alert("Product ID: " + jsonObject.product_id + "\n" + "Quantity: " + jsonObject.quantity);
+
+                fetch('/add_to_cart', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(Object.fromEntries(formData.entries()))
+                })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.message); 
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            });
+
+            document.getElementById('add-to-cart-form3').addEventListener('submit', function(event) {
+                event.preventDefault();
+                var formData = new FormData(this);
+                var jsonObject = Object.fromEntries(formData.entries());
+                alert("Product ID: " + jsonObject.product_id + "\n" + "Quantity: " + jsonObject.quantity);
+
+                fetch('/add_to_cart', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(Object.fromEntries(formData.entries()))
+                })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.message); 
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            });
+
+        </script>
+
+        <div class="reviews">
+            <h3>Product Reviews</h3>
+            {% for review in reviews %}
+            <div class="review">
+                <div class="user">{{ review[2] }}</div>
+                <div class="product">Product: {{ review[5] }}</div>
+                <div class="rating">Rating: {{ review[3] }}/5</div>
+                <div class="comment">{{ review[4] }}</div>
+            </div>
+            {% endfor %}
+        </div>
+        <h3>Add Your Review</h3>
+        <form action="{{ url_for('submit_review') }}" method="post" class="add-review-form">
+            <label for="product_id">Product:</label>
+            <select id="product_id" name="product_id">
+                <option value="1">Hockey Stick</option>
+                <option value="2">Helmet</option>
+                <option value="3">Skates</option>
+            </select>
+            <label for="rating">Rating:</label>
+            <select id="rating" name="rating">
+                <option value="5">★★★★★</option>
+                <option value="4">★★★★☆</option>
+                <option value="3">★★★☆☆</option>
+                <option value="2">★★☆☆☆</option>
+                <option value="1">★☆☆☆☆</option>
+            </select>
+            <label for="comment">Comment:</label>
+            <textarea id="comment" name="comment" rows="4" required></textarea>
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token }}">
+            <button type="submit">Submit Review</button>
+        </form>
+    </div>
+</body>
+</html>
+
+
+
+
+
+

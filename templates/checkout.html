@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Checkout</h1>
+        {% if error %}
+        <p class="error">{{ error }}</p>
+        {% endif %}
+        {% if success_message %}
+        <p class="success">{{ success_message }}</p>
+        {% endif %}
+        <div class="cart-items">
+            {% for item in cart_items %}
+            <div class="cart-item">
+                <div class="product-info">
+                    <h3>{{ item.name }}</h3>
+                    <p>Quantity: {{ item.quantity }}</p>
+                    <p>Unit Price: ${{ item.unit_price }}</p>
+                    <p>Total Price: ${{ item.total_price }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <a href="{{ url_for('home') }}" class="back-button">Back to Home</a>
+        <form action="{{ url_for('purchase') }}" method="post">
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token }}">
+            <button type="submit" class="purchase-button">Purchase</button>
+        </form>
+    </div>
+    <script>
+        // Automatically dismiss alert messages after 5 seconds
+        setTimeout(function() {
+            var errorMessage = document.querySelector('.error');
+            if (errorMessage) {
+                errorMessage.style.display = 'none';
+            }
+            var successMessage = document.querySelector('.success');
+            if (successMessage) {
+                successMessage.style.display = 'none';
+            }
+        }, 5000); // 5000 milliseconds = 5 seconds
+    </script>
+</body>
+</html>
+
+
+
+
+
